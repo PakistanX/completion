@@ -41,7 +41,9 @@ def scorable_block_completion(sender, **kwargs):  # pylint: disable=unused-argum
         return
     user = User.objects.get(id=kwargs['user_id'])
     if kwargs.get('score_deleted'):
-        completion = 0.0
+        # Delete the already added Model instead of assigning copmletion 0
+        BlockCompletion.objects.filter(user=user,block_key=block_key).delete()
+        return
     else:
         completion = 1.0
     if not kwargs.get('grader_response'):
